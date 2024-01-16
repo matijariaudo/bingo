@@ -1,0 +1,215 @@
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <title>Document</title>
+  <style>
+  body{
+    font-family:Arial, Helvetica, sans-serif;
+  }
+  /* Estilos para el botón de carga personalizado */
+  .custom-file-upload {
+    border: 1px solid #ccc;
+    display: inline-block;
+    padding: 6px 12px;
+    cursor: pointer;
+    background-color: #14958e;
+    color:#FFF;
+    border-radius: 4px;
+    transition: background-color 0.3s ease;
+  }
+
+  .custom-file-upload:hover {
+    background-color: #e0e0e0;
+  }
+
+  /* Ocultar el input file */
+  input[type="file"] {
+    display: none;
+  }
+  
+  </style>
+</head>
+<body>
+  <div class="container"  style="padding: 0px;;margin: 0px;padding: 0px;">
+    <div class="capa capa_0 row" style="padding: 0px;;margin: 0px;padding: 30px;text-align: center;">
+    <div class="col-12">Cargando datos..</div>
+    </div>
+    <div class="capa capa_1 row" style="padding: 0px;;margin: 0px;padding: 0px;text-align: center;">
+    <form id="uploadForm" enctype="multipart/form-data">
+      Name<input type="text" class="form-control" id="archivo_name">
+      <br>
+      <label for="archivo" class="custom-file-upload">
+        Picture
+        <input type="file" name="archivo" id="archivo" />
+      </label>
+      <br><br>
+      <button class="btn" type="submit" style="background-color: #14958e;color:#FFF">Subir</button>
+    </form>
+    <div class="container">
+      <div class="col-12" id="bingos" style="padding: 0px;">
+        
+      </div>
+    </div>
+    </div>
+    <div class="capa capa_2 row" style="padding: 10px;;margin: 0px;padding: 0px;text-align: center;">
+        <div class="col-12" style="padding: 10px;">
+        <input type="text" class="form-control">
+        </div>
+        <div class="co-12 songs" style="">
+
+        </div>
+    </div>
+  </div>
+
+  <nav class="navbar fixed-bottom" style="padding: 0px;background-color: #FFF;text-align: center;box-shadow: -2px 5px 30px -5px rgba(0,0,0,0.75);">
+    <div class="col-6 nav_div nav_div_1" onclick="capa(1)" style="border:1px solid #e0e0e0;border-width: 0px 1px 0px 0px;padding: 10px;">Bingos</div>
+    <div class="col-6 nav_div nav_div_2" onclick="capa(2)" style="border:1px solid #e0e0e0;border-width: 0px 1px 0px 0px;padding: 10px">Canciones</div>
+      
+  </nav>
+
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <script>
+
+    function capa(i){
+      $(".capa").hide();
+      $(".capa_"+i).show();
+      $('.nav_div').css('color','#000');
+      $(".nav_div_"+i).css('color','rgba(7, 164, 114)');
+    }
+
+    capa(0)
+    initsearch()
+
+    $(document).ready(function() {
+    $('#archivo').change(function() {
+      //$('#uploadForm').submit(); // Enviar el formulario cuando se selecciona un archivo
+    });
+
+    $('#uploadForm').submit(function(e) {
+      e.preventDefault(); // Evitar la recarga de la página al enviar el formulario
+      var formData = new FormData($(this)[0]); // Obtener los datos del formulario
+      var archivo_name = $('#archivo_name').val();
+      formData.append('archivo_name', archivo_name);
+      capa(0)
+      $.ajax({
+        url: '/upload', // URL del servidor donde se enviarán los datos
+        type: 'POST',
+        data: formData,
+        processData: false,
+        contentType: false,
+        success: function(response) {
+          console.log(response)
+          initsearch()
+          
+        },
+        error: function(error) {
+          // Manejar errores si ocurren
+        }
+      });
+    });
+  });
+
+  
+
+  function initsearch(){
+    $("#bingos").html("");
+    $(".songs").html("")
+    capa(0)
+    var requestOptions = {
+    method: 'POST',
+    redirect: 'follow'
+  };
+  fetch("/user/img", requestOptions)
+    .then(response => response.json())
+    .then(result =>{
+      songs_data=[]
+        bingos_html=[]
+        newA=result.map(a=>{
+          arrayA=a.bingo.map(b=>b.chequeado)
+          l1=arrayA.slice(0,5).filter(c=>{if(c){return true;}}).length;
+          l2=arrayA.slice(5,10).filter(c=>{if(c){return true;}}).length;
+          l3=arrayA.slice(10,15).filter(c=>{if(c){return true;}}).length;
+          l4=arrayA.slice(15,20).filter(c=>{if(c){return true;}}).length;
+          l5=arrayA.slice(20,25).filter(c=>{if(c){return true;}}).length;
+          return [l1,l2,l3,l4,l5].filter(c=>c==5).length  
+        })
+        result=result.map((a,i)=>{a.lineas=newA[i];return a;})
+
+        result.sort((a,b)=>b.lineas-a.lineas).forEach((e,t) => {
+          html=`<center><img style="width:90px;border-radius:10px;margin:5px;display:none" src="${e.url}" ></center>`
+          html+=`<div class="row" style="padding:20px"><p style="margin:0px">Name: ${e.name || "-"} || Lineas ${e.lineas}<p>`
+          li=0;liact=0;lineas=0;
+          e.bingo.forEach(s => {
+              songs_data.push(s)
+              html+=`<div class="col" style="background:${s.chequeado?"yellow":"#FFF"};width:20%;margin:0px;font-size:.7em;border:.1px solid #000;text-align:center">${s.song}<br>(${s.fila},${s.columna})<br></div>`;
+              li++;
+              if(s.chequeado){liact++;}
+              if(li==5){if(liact==5){lineas++;};li=0;liact=0;}
+          });
+          html+=`</div>`;
+          $("#bingos").append(html)
+          $("#lineas_"+t).html(lineas)
+        });
+        
+        songs_data=songs_data.map(a=>{a.realsong=a.song;a.song=a.song.replaceAll("-","").replaceAll(".","").replaceAll(" ","").trim();return a;})
+        songs_data.sort((a, b) => a.song.localeCompare(b.song));
+        songs_data.forEach(e => {
+          iguales=songs_data.filter(a=>jaccardSimilarity(a.song,e.song)>.65)
+          songs_data=songs_data.map(a=>{if(iguales.findIndex(b=>b._id==a._id)>-1){a.song=e.song};return a});
+        });
+        const songs = Object.values(
+          songs_data.reduce((acc, { song, ...rest }) => {
+            acc[song] = acc[song] || { song, cantidad: 0, ...rest,ids:[],title:[]};
+            acc[song].cantidad++;
+            acc[song].ids.push(rest._id)
+            acc[song].title.push(rest.realsong)
+            return acc;
+          }, {})
+        );
+        console.log(songs)
+        songs.sort((a, b) => a.song.localeCompare(b.song)).forEach((s,i) => {
+          html_btn=`<button class="btn" id="btn_${i}" style="background:${s.chequeado?"green":"red"};color:#FFF">Chequear</button>`
+          $(".songs").append(`<div class="col-12" style="padding:10px;margin-bottom:10px;box-shadow: -2px 5px 30px -10px rgba(0,0,0,.16);border-radius:10px;text-align:left">${s.realsong} (${s.cantidad}) ${html_btn}</div>`)  
+          $("#btn_"+i).on("click",()=>{
+            act(s.ids,!s.chequeado)
+          })
+        
+        });
+        capa(1);              
+    })
+    .catch(error => console.log('error', error));
+    }
+
+    function jaccardSimilarity(str1, str2) {
+      const set1 = new Set(str1.split(''));
+      const set2 = new Set(str2.split(''));
+
+      const intersection = new Set([...set1].filter(char => set2.has(char)));
+      const union = new Set([...set1, ...set2]);
+
+      const similarity = intersection.size / union.size;
+      return similarity;
+    }
+
+    function act(ids,valor){
+      var settings = {
+      "url": "/cambios",
+      "method": "POST",
+      "timeout": 0,
+      "headers": {
+        "Content-Type": "application/json"
+      },
+      "data": JSON.stringify({ids,valor}),
+    };
+
+    $.ajax(settings).done(function (response) {
+      console.log(response);
+      initsearch()
+    });
+    }
+    </script>
+</body>
+</html>
