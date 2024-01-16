@@ -1,16 +1,17 @@
 import { S3, CreateBucketCommand,PutObjectCommand,GetObjectCommand} from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-
- import fs from 'fs'
+import dotenv from 'dotenv'
+dotenv.config()
  
  // Create an Amazon S3 service client object.
  const s3Client = new S3({ 
     region:'us-east-1',
     credentials: {
-        accessKeyId:'AKIA6KE6BCNLDO3ELO6S',
-        secretAccessKey:'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'
+        accessKeyId:process.env.AWS_KEY_ID,
+        secretAccessKey:process.env.AWS_SECRET
     }
- });
+});
+ 
  
 //upload('img/bingo.jpg');
 //createNewBucket("b-test-node-01")
