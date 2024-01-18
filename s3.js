@@ -26,14 +26,7 @@ export async function uploadS3(bucketName,archivoStream,name){
    // Create an object and upload it to the Amazon S3 bucket.
    try {
      const results = await s3Client.send(new PutObjectCommand(params));
-     console.log(
-         "Successfully created " +
-         params.Key +
-         " and uploaded it to " +
-         params.Bucket +
-         "/" +
-         params.Key
-     );
+     //console.log("Successfully created "+params.Key +" and uploaded it to " +params.Bucket + "/" + params.Key);
      return results; // For unit tests.
    } catch (err) {
      console.log("Error", err);
@@ -68,7 +61,6 @@ export async function showImg(name) {
         };
         const command = new GetObjectCommand(input);
         const url=await getSignedUrl(s3Client,command,{expiresIn:3600})
-        console.log(url)
         return url;
       
     } catch (error) {

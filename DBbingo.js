@@ -14,6 +14,7 @@ const songSchema=new Schema({
 const bingoSchema = new Schema({
     url:String,
     name:String,
+    user_id:String,
     active:{type:Boolean,default:true},
     //userId:ObjectId,
     bingo:

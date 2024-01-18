@@ -1,13 +1,22 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
+  <meta name="theme-color" content="#000" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css">
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300&display=swap" rel="stylesheet">
+    
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/material-design-iconic-font/2.2.0/css/material-design-iconic-font.min.css">
+
   <title>Document</title>
   <style>
   body{
-    font-family:Arial, Helvetica, sans-serif;
+    background-color: #161616;
+    color:#FFF;
+    font-family: 'Fredoka', sans-serif;
   }
   /* Estilos para el botón de carga personalizado */
   .custom-file-upload {
@@ -25,6 +34,10 @@
     background-color: #e0e0e0;
   }
 
+  .songs_list{
+    
+  }
+
   /* Ocultar el input file */
   input[type="file"] {
     display: none;
@@ -33,41 +46,66 @@
   </style>
 </head>
 <body>
-  <div class="container"  style="padding: 0px;;margin: 0px;padding: 0px;">
-    <div class="capa capa_0 row" style="padding: 0px;;margin: 0px;padding: 30px;text-align: center;">
-    <div class="col-12">Cargando datos..</div>
+  <div class="container-fluid"  style="padding: 0px;;margin: 0px;padding: 0px;">
+    <div class="capa capa_0 row" style="padding: 0px;background: #000;height: 100vh;margin: 0px;padding: 30px;text-align: center;">
+      
+    <div class="offset-4 col-4" style="padding-top: 100px;"><img src="img/loading.gif" style="width: 100%;"><br>Loading..</div>
     </div>
     <div class="capa capa_1 row" style="padding: 0px;;margin: 0px;padding: 0px;text-align: center;">
+
     <form id="uploadForm" enctype="multipart/form-data">
-      Name<input type="text" class="form-control" id="archivo_name">
-      <br>
-      <label for="archivo" class="custom-file-upload">
-        Picture
-        <input type="file" name="archivo" id="archivo" />
-      </label>
-      <br><br>
-      <button class="btn" type="submit" style="background-color: #14958e;color:#FFF">Subir</button>
+      <div class="row" style="padding: 10px;background-color: #000;">
+        <div class="col-1 p-1">
+          <label for="archivo" class="custom-file-upload" style="width: 100%;color:#FFCC00;background-color: #000;border:0px">
+            <i class="zmdi zmdi-camera" style="font-size: 1.5em;"></i>
+            <input type="file" name="archivo" id="archivo" />
+          </label>
+        </div>
+        <div class="col-8 p-1"><input type="text" class="form-control" id="archivo_name" placeholder="Bingo name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;"></div>
+        <div class="col-3 p-1">
+          <button class="btn" type="submit" style="color: #000;background-color:#FFCC00;width: 100%;border-radius:100px;">Send</button>
+        </div>
+      </div>
+      
     </form>
     <div class="container">
-      <div class="col-12" id="bingos" style="padding: 0px;">
-        
+      <div class="col-12">
+        <button class="btn btn_filter" id="btn_filter_1" data="1"><i class="zmdi zmdi-long-arrow-right"></i></button>
+        <button class="btn btn_filter" id="btn_filter_2" data="2"><i class="zmdi zmdi-long-arrow-up"></i></button>
+        <button class="btn btn_filter" id="btn_filter_3" data="3"><i class="zmdi zmdi-collection-music"></i></button>
+      
       </div>
+      <div class="col-12" id="bingos" style="padding: 0px 0px 10px 0px;">
+      
+      </div>
+      <div class="col-12" style="padding:0px;color:#FFCC00;font-size: .6em;margin-bottom: 70px;">User Id: <b class="user_id"></b> </div>  
+  
     </div>
     </div>
-    <div class="capa capa_2 row" style="padding: 10px;;margin: 0px;padding: 0px;text-align: center;">
-        <div class="col-12" style="padding: 10px;">
-        <input type="text" class="form-control">
+    <div class="capa capa_2 row" style="margin: 0px;padding: 0px;text-align: center;">
+        
+        <div class="row" style="padding: 10px;background-color: #000;margin: 0px;">
+        <input type="text" class="form-control" id="txt_buscar" placeholder="Song name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;">
         </div>
-        <div class="co-12 songs" style="">
+        <div class="co-12 songs" style="padding:30px 20px 100px 20px">
 
         </div>
+    </div>
+    <div class="capa capa_3 row" style="padding: 40px 30px;background: #000;min-height: 100%;">
+      <div class="col-12">
+      <center><img src="img/loading.gif" style="width: 90px;" id="img_show_loading"></center>
+      <img src="" alt="" id="img_show" onload="$(this).show();$('#img_show_loading').hide()" style="width: 100%;border:1px solid #FFF">
+      <button class="btn" onclick="capa(1)" style="border-radius:100px;background:rgb(100,100,100);color:rgba(200,200,200);margin-top:30px">
+        <i class="zmdi zmdi-arrow-left"></i>
+        Go back
+      </button>
+    </div>
     </div>
   </div>
 
-  <nav class="navbar fixed-bottom" style="padding: 0px;background-color: #FFF;text-align: center;box-shadow: -2px 5px 30px -5px rgba(0,0,0,0.75);">
-    <div class="col-6 nav_div nav_div_1" onclick="capa(1)" style="border:1px solid #e0e0e0;border-width: 0px 1px 0px 0px;padding: 10px;">Bingos</div>
-    <div class="col-6 nav_div nav_div_2" onclick="capa(2)" style="border:1px solid #e0e0e0;border-width: 0px 1px 0px 0px;padding: 10px">Canciones</div>
-      
+  <nav class="navbar fixed-bottom capa capa_1 capa_2" style="padding: 0px;background-color: #000;text-align: center;box-shadow: -2px 5px 30px -5px rgba(66, 66, 66, 0.75);">
+    <div class="col-6 nav_div nav_div_1" onclick="capa(1)" style="border:1px solid #2f2f2f;border-width: 0px 1px 0px 0px;padding: 20px 10px;"><i class="zmdi zmdi-format-list-bulleted"></i> BINGOS</div>
+    <div class="col-6 nav_div nav_div_2" onclick="capa(2)" style="border:1px solid #5e5e5e;border-width: 0px 1px 0px 0px;padding: 20px 10px"><i class="zmdi zmdi-collection-music"></i> SONGS</div>
   </nav>
 
   <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
@@ -76,15 +114,33 @@
     function capa(i){
       $(".capa").hide();
       $(".capa_"+i).show();
-      $('.nav_div').css('color','#000');
-      $(".nav_div_"+i).css('color','rgba(7, 164, 114)');
+      $('.nav_div').css('color','#979797');
+      $(".nav_div_"+i).css('color','#FFCC00');
     }
-
+    bingos_qty=0
     capa(0)
-    initsearch()
+    
+    //Setting filtros
+    btn_filter=localStorage.getItem('btn_filter');
+    if(!btn_filter){btn_filter=3;}
+    $('.btn_filter').css('background','#4e4e4e');$('#btn_filter_'+btn_filter).css('background','#FFCC00');
+    $('.btn_filter').on("click",function(){ 
+      $('.btn_filter').css('background','#4e4e4e');
+      $(this).css('background','#FFCC00');
+      btn_filter=$(this).attr("data")
+      initsearch();
+    })
+    //Setting user
+    user_id=localStorage.getItem('user_id');
+    if(!user_id){user_id=generarCodigo(30);localStorage.setItem('user_id',user_id);}
+    $(".user_id").html(user_id)
 
+    initsearch()
+    
     $(document).ready(function() {
     $('#archivo').change(function() {
+      $("#archivo_name").val("Bingo "+(bingos_qty+1));
+      $("#archivo_name").focus()
       //$('#uploadForm').submit(); // Enviar el formulario cuando se selecciona un archivo
     });
 
@@ -93,6 +149,7 @@
       var formData = new FormData($(this)[0]); // Obtener los datos del formulario
       var archivo_name = $('#archivo_name').val();
       formData.append('archivo_name', archivo_name);
+      formData.append('user_id', user_id);
       capa(0)
       $.ajax({
         url: '/upload', // URL del servidor donde se enviarán los datos
@@ -115,18 +172,26 @@
   
 
   function initsearch(){
+    localStorage.setItem('btn_filter',btn_filter);
     $("#bingos").html("");
     $(".songs").html("")
+    bingos_qty=0;
     capa(0)
+    var myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
+    var raw = JSON.stringify({
+      user_id
+    });
     var requestOptions = {
-    method: 'POST',
-    redirect: 'follow'
-  };
+      method: 'POST',
+      headers: myHeaders,
+      body: raw,
+      redirect: 'follow'
+    };  
   fetch("/user/img", requestOptions)
     .then(response => response.json())
     .then(result =>{
       songs_data=[]
-        bingos_html=[]
         newA=result.map(a=>{
           arrayA=a.bingo.map(b=>b.chequeado)
           l1=arrayA.slice(0,5).filter(c=>{if(c){return true;}}).length;
@@ -136,20 +201,50 @@
           l5=arrayA.slice(20,25).filter(c=>{if(c){return true;}}).length;
           return [l1,l2,l3,l4,l5].filter(c=>c==5).length  
         })
-        result=result.map((a,i)=>{a.lineas=newA[i];return a;})
-
-        result.sort((a,b)=>b.lineas-a.lineas).forEach((e,t) => {
-          html=`<center><img style="width:90px;border-radius:10px;margin:5px;display:none" src="${e.url}" ></center>`
-          html+=`<div class="row" style="padding:20px"><p style="margin:0px">Name: ${e.name || "-"} || Lineas ${e.lineas}<p>`
+        newB=result.map(a=>{
+          l1=a.bingo.filter(a=>a.columna==0).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
+          l2=a.bingo.filter(a=>a.columna==1).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
+          l3=a.bingo.filter(a=>a.columna==2).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
+          l4=a.bingo.filter(a=>a.columna==3).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
+          l5=a.bingo.filter(a=>a.columna==4).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
+          return [l1,l2,l3,l4,l5].filter(c=>c==5).length  
+        })
+        newC=result.map(a=>{
+          return a.bingo.map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
+        })
+        console.log(newC)
+        result=result.map((a,i)=>{a.lineas=newA[i];a.verticales=newB[i];a.chequeados=newC[i];return a;})
+        
+        if(btn_filter==1){result.sort((a,b)=>b.lineas-a.lineas);}
+        if(btn_filter==2){result.sort((a,b)=>b.verticales-a.verticales);}
+        if(btn_filter==3){result.sort((a,b)=>b.chequeados-a.chequeados);}
+        result.forEach((e,t) => {
+          bingos_qty++;
+          console.log(e.url)
+          html=``
+          html+=`<div class="col-12" style="padding:20px">
+            <p style="margin:0px;font-size:1.2em">${e.name || "-"}
+            </p>
+            <p style='color:#9e9e9e;font-size:.8em;margin:0px'>
+              <i class="zmdi zmdi-long-arrow-right"></i> ${e.lineas} |
+              <i class="zmdi zmdi-long-arrow-up"></i> ${e.verticales} |
+              <i class="zmdi zmdi-collection-music"></i> ${e.chequeados}     </p>         
+              <button class="btn btn-xs btn_img" data_img="${e.url}" style="padding:1px 10px;margin-top:-41px;font-size:1.1em;border-radius:100px;background:rgb(100,100,100);color:rgba(200,200,200);float:left">
+                <i class="zmdi zmdi-eye"></i>
+              </button>
+              <button class="btn btn-xs btn_delete" data_btn="${e.id}" style="padding:1px 10px;margin-top:-41px;font-size:1.1em;border-radius:100px;background:rgb(100,100,100);color:rgba(200,200,200);float:right">
+                <i class="zmdi zmdi-delete"></i>
+              </button>
+            <div class="row" style="color:#FFF;border-radius:10px;margin-top:20px">`
           li=0;liact=0;lineas=0;
           e.bingo.forEach(s => {
               songs_data.push(s)
-              html+=`<div class="col" style="background:${s.chequeado?"yellow":"#FFF"};width:20%;margin:0px;font-size:.7em;border:.1px solid #000;text-align:center">${s.song}<br>(${s.fila},${s.columna})<br></div>`;
+              html+=`<div class="col" style="background:${s.chequeado?"rgb(120, 255, 188,.1)":"rgb(242, 212, 73,.5)"};width:20%;min-width:20%;margin:0px;font-size:.7em;border:.1px solid #000;text-align:center;padding:0px;display: flex;align-items: center;justify-content: center;">${s.song}</div>`; 
               li++;
               if(s.chequeado){liact++;}
               if(li==5){if(liact==5){lineas++;};li=0;liact=0;}
           });
-          html+=`</div>`;
+          html+=`</div></div>`;
           $("#bingos").append(html)
           $("#lineas_"+t).html(lineas)
         });
@@ -157,7 +252,7 @@
         songs_data=songs_data.map(a=>{a.realsong=a.song;a.song=a.song.replaceAll("-","").replaceAll(".","").replaceAll(" ","").trim();return a;})
         songs_data.sort((a, b) => a.song.localeCompare(b.song));
         songs_data.forEach(e => {
-          iguales=songs_data.filter(a=>jaccardSimilarity(a.song,e.song)>.65)
+          iguales=songs_data.filter(a=>compararCadenas(a.song,e.song)>.9)
           songs_data=songs_data.map(a=>{if(iguales.findIndex(b=>b._id==a._id)>-1){a.song=e.song};return a});
         });
         const songs = Object.values(
@@ -169,29 +264,59 @@
             return acc;
           }, {})
         );
-        console.log(songs)
         songs.sort((a, b) => a.song.localeCompare(b.song)).forEach((s,i) => {
-          html_btn=`<button class="btn" id="btn_${i}" style="background:${s.chequeado?"green":"red"};color:#FFF">Chequear</button>`
-          $(".songs").append(`<div class="col-12" style="padding:10px;margin-bottom:10px;box-shadow: -2px 5px 30px -10px rgba(0,0,0,.16);border-radius:10px;text-align:left">${s.realsong} (${s.cantidad}) ${html_btn}</div>`)  
+          html_btn=`<button class="btn" id="btn_${i}" style="float:right;background:rgb(0,0,0,.3);color:rgb(255,255,255,.7);border:0px"><i class="zmdi zmdi-${s.chequeado?"delete":"check"}"></i></button>`
+          $(".songs").append(`<div class="col-12 songs_list" style="padding:10px;background:${s.chequeado?"rgb(120, 255, 188,.1)":"rgb(242, 212, 73,.5)"};margin-bottom:10px;box-shadow: -2px 5px 30px -10px rgba(0,0,0,.16);border-radius:10px;text-align:left">${html_btn}${s.realsong} (${s.cantidad})</div>`)  
           $("#btn_"+i).on("click",()=>{
             act(s.ids,!s.chequeado)
           })
         
         });
-        capa(1);              
+        capa(1);   
+        $(".btn_delete").on("click",function (e) {  
+          capa(0)
+          var settings = {
+          "url": "/delete",
+          "method": "POST",
+          "timeout": 0,
+          "headers": {
+            "Content-Type": "application/json"
+          },
+          "data": JSON.stringify({
+            "id": $(this).attr('data_btn'),
+            "status": false
+          }),
+          };
+
+          $.ajax(settings).done(function (response) {
+            initsearch()
+          });     
+        })     
+        $(".btn_img").on("click",function (e) {  
+          $("#img_show").hide();
+          $("#img_show_loading").show()
+          $("#img_show").attr("src",$(this).attr('data_img'));
+          capa(3)
+        })      
     })
     .catch(error => console.log('error', error));
     }
 
-    function jaccardSimilarity(str1, str2) {
+    function compararCadenas(str1, str2) {
       const set1 = new Set(str1.split(''));
-      const set2 = new Set(str2.split(''));
-
-      const intersection = new Set([...set1].filter(char => set2.has(char)));
-      const union = new Set([...set1, ...set2]);
-
-      const similarity = intersection.size / union.size;
-      return similarity;
+      coin=0;total=0;
+      set1.forEach(e => {
+        c1=str1.split('').filter(a=>a==e).length;
+        c2=str2.split('').filter(a=>a==e).length;
+        max=Math.max(c1,c2);
+        dif=Math.abs(c1-c2);
+        total+=max;
+        coin+=(max-dif);
+        
+      });
+      rta=coin/total;
+      //console.log()
+      return rta;
     }
 
     function act(ids,valor){
@@ -209,6 +334,34 @@
       console.log(response);
       initsearch()
     });
+    }
+
+    let dejodeescribir;
+    $("#txt_buscar").on("keyup",function () {
+        txt=$(this).val();
+        clearInterval(dejodeescribir)
+        dejodeescribir=setInterval(()=>{
+          $(".songs_list").show()
+          $(".songs_list").each(function(s){
+            if($(this).html().toLowerCase().indexOf(txt.toLowerCase())<0){
+              $(this).hide()
+            }
+          });
+          clearInterval(dejodeescribir)
+        },300)
+     })
+
+
+     function generarCodigo(longitud) {
+      const caracteres = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+      let codigo = "";
+
+      for (let i = 0; i < longitud; i++) {
+        const caracterAleatorio = caracteres.charAt(Math.floor(Math.random() * caracteres.length));
+        codigo += caracterAleatorio;
+      }
+
+      return codigo;
     }
     </script>
 </body>

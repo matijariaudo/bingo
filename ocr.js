@@ -37,25 +37,38 @@ try {
                     y:e.Geometry.BoundingBox.Left,yf:e.Geometry.BoundingBox.Left+e.Geometry.BoundingBox.Width,
                     pos:i})
     });
-    valores.shift()
+    //valores.shift()
     //console.log(valores)
-    const minx=Math.min(...valores.map(a=>a.x));
+    let minx=Math.min(...valores.map(a=>a.x));
     const maxx=Math.max(...valores.map(a=>a.xf));
     const miny=Math.min(...valores.map(a=>a.y));
     const maxy=Math.max(...valores.map(a=>a.yf));
-    const pasox=(maxx-minx)/5;const limitx=[minx+0*pasox*.98,minx+1*pasox*.98,minx+2*pasox*.98,minx+3*pasox*.98,minx+4*pasox*.98,minx+5*pasox]
-    const pasoy=(maxy-miny)/5;const limity=[miny+0*pasoy*.98,miny+1*pasoy*.98,miny+2*pasoy*.98,miny+3*pasoy*.98,miny+4*pasoy*.98,miny+5*pasoy]
+    minx=minx-(maxx-minx)/11;
+    const pasox=(maxx-minx)/12;const limitx=[minx+1*pasox,minx+3*pasox,minx+5*pasox,minx+7*pasox,minx+9*pasox,minx+11*pasox]
+    const pasoy=(maxy-miny)/10;const limity= [minx+1*pasoy,minx+3*pasoy,minx+5*pasoy,minx+7*pasoy,minx+9*pasoy]
+    //console.log("const coordenadasY = ",limitx)
+    //console.log("const coordenadasX = ",limity)
     var rta=[]
     valores.forEach(e => {
-        var posx=limitx.findIndex(a=>a>e.x)-1;
-        var posy=limity.findIndex(a=>a>e.y)-1;
+        var distanciasx1=limitx.map(a=>Math.abs(a-e.x))
+        var disMinx1=Math.min(...distanciasx1)
+        var distanciasx2=limitx.map(a=>Math.abs(a-e.xf))
+        var disMinx2=Math.min(...distanciasx2)
+        var posx;
+        if(disMinx1<disMinx2){posx=distanciasx1.indexOf(disMinx1);}else{posx=distanciasx2.indexOf(disMinx2)} 
+        
+        var distanciasy=limity.map(a=>Math.abs(a-(e.yf+e.y)/2))
+        var disMiny=Math.min(...distanciasy)
+        var posy=distanciasy.indexOf(disMiny)
         !rta[posx]?rta[posx]=[]:"";
         !rta[posx][posy]?rta[posx][posy]=[]:"";
         rta[posx][posy].push(e.text)
         //console.log(e.text,posx,posy);
     });
-    console.log(rta.map(a=>a.map(b=>b.join(" "))))
-    return rta.map(a=>a.map(b=>b.join(" ")));
+    const fin=rta.map(a=>a.map(b=>b.join(" ")));
+    //console.log(rta.map(a=>a.map(b=>b.join(" "))))
+    return  fin.slice(1)
+    
     
   } catch (error) {
     // error handling.
@@ -63,8 +76,9 @@ try {
   }
 }
 
+//console.log(await revisar("ES1kHvVgGE4YvFTERmupI.jpg"))
+//console.log(await revisar("p7mRTbJpMLcrK99krtyiE.jpg"))
 
-//revisar("IQB583xAJAoDgYrchudkV.jpg");
 //revisar("94ifrtNqIdRjoaxtZCuoR.jpg");
 //revisar("DvPqZdEmP1PrSnDTugIV2.jpg");
 //revisar("4VStFZi7mK29aRRvog2Oy.jpg");
