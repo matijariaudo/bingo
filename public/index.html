@@ -53,28 +53,38 @@
     </div>
     <div class="capa capa_1 row" style="padding: 0px;;margin: 0px;padding: 0px;text-align: center;">
 
-    <form id="uploadForm" enctype="multipart/form-data">
-      <div class="row" style="padding: 10px;background-color: #000;">
-        <div class="col-1 p-1">
-          <label for="archivo" class="custom-file-upload" style="width: 100%;color:#FFCC00;background-color: #000;border:0px">
-            <i class="zmdi zmdi-camera" style="font-size: 1.5em;"></i>
-            <input type="file" name="archivo" id="archivo" />
-          </label>
-        </div>
-        <div class="col-8 p-1"><input type="text" class="form-control" id="archivo_name" placeholder="Bingo name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;"></div>
-        <div class="col-3 p-1">
-          <button class="btn" type="submit" style="color: #000;background-color:#FFCC00;width: 100%;border-radius:100px;">Send</button>
-        </div>
-      </div>
-      
-    </form>
+    <div class="row" style="padding: 10px;background-color: #000;margin: 0px;">
+      <input type="text" class="form-control" onclick="capa(2);$('#txt_buscar').focus()"placeholder="Song name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;">
+    </div>
     <div class="container">
-      <div class="col-12">
+      <div class="col-12" style="margin-top: 20px;">
+        <button class="btn" id="" data="1" style="background-color: #FFCC00;margin-bottom: 10px;" onclick="$('#uploadForm').show()"><i class="zmdi zmdi-plus" ></i> ADD BINGO</button>
+        <br>
         <button class="btn btn_filter" id="btn_filter_1" data="1"><i class="zmdi zmdi-long-arrow-right"></i></button>
         <button class="btn btn_filter" id="btn_filter_2" data="2"><i class="zmdi zmdi-long-arrow-up"></i></button>
         <button class="btn btn_filter" id="btn_filter_3" data="3"><i class="zmdi zmdi-collection-music"></i></button>
-      
       </div>
+      <form id="uploadForm" enctype="multipart/form-data" style="display: none;">
+        <div class="col-12" style="padding: 0px 30px;margin-top: 40px;">
+          <div class="row" style="padding: 10px;border-radius: 10px;border: 1px solid #ccc;border-style: dashed;">
+            <div class="col-4 p-1">
+              <label for="archivo" class="custom-file-upload" style="width: 100%;color: #000;background-color:#FFCC00;border-radius:100px;border: 0px;width: 100%;">
+                <i class="zmdi zmdi-camera" style="font-size: 1.5em;margin-bottom: px;"></i> 
+                <input type="file" name="archivo" id="archivo" />
+              </label>
+            </div>
+            <div class="col-7 p-1"><input type="text" class="form-control" id="archivo_name" placeholder="Bingo name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;"></div>
+            <div class="col-1 p-1" style="color: #ccc;font-size: 1.4em;">
+              <i onclick="$('#uploadForm').hide()" style="float: right;margin-top: 8px;" class="zmdi zmdi-delete"></i>
+            </div>
+              <div class="col-12 p-1">
+              <button class="btn" type="submit" style="color: #000;background-color:#FFCC00;width: 100%;border-radius:100px;">Send</button>
+            </div>
+          </div>
+        </div>
+        
+      </form>
+      
       <div class="col-12" id="bingos" style="padding: 0px 0px 10px 0px;">
       
       </div>
@@ -145,6 +155,7 @@
     });
 
     $('#uploadForm').submit(function(e) {
+      $("#uploadForm").hide()
       e.preventDefault(); // Evitar la recarga de la página al enviar el formulario
       var formData = new FormData($(this)[0]); // Obtener los datos del formulario
       var archivo_name = $('#archivo_name').val();
@@ -199,15 +210,22 @@
           l3=arrayA.slice(10,15).filter(c=>{if(c){return true;}}).length;
           l4=arrayA.slice(15,20).filter(c=>{if(c){return true;}}).length;
           l5=arrayA.slice(20,25).filter(c=>{if(c){return true;}}).length;
-          return [l1,l2,l3,l4,l5].filter(c=>c==5).length  
+          const linCount=[l1,l2,l3,l4,l5].filter(c=>c==5).length;
+          const maxCount=Math.max(...[l1,l2,l3,l4,l5].filter(c=>c<5))
+          console.log("horizontal",[l1,l2,l3,l4,l5])
+          return {linCount,maxCount}  
         })
+        console.log(1)
         newB=result.map(a=>{
           l1=a.bingo.filter(a=>a.columna==0).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
           l2=a.bingo.filter(a=>a.columna==1).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
           l3=a.bingo.filter(a=>a.columna==2).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
           l4=a.bingo.filter(a=>a.columna==3).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
           l5=a.bingo.filter(a=>a.columna==4).map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
-          return [l1,l2,l3,l4,l5].filter(c=>c==5).length  
+          const linCount=[l1,l2,l3,l4,l5].filter(c=>c==5).length;
+          const maxCount=Math.max(...[l1,l2,l3,l4,l5].filter(c=>c<5))
+          console.log("vertical",[l1,l2,l3,l4,l5])
+          return {linCount,maxCount}  
         })
         newC=result.map(a=>{
           return a.bingo.map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
@@ -215,8 +233,14 @@
         console.log(newC)
         result=result.map((a,i)=>{a.lineas=newA[i];a.verticales=newB[i];a.chequeados=newC[i];return a;})
         
-        if(btn_filter==1){result.sort((a,b)=>b.lineas-a.lineas);}
-        if(btn_filter==2){result.sort((a,b)=>b.verticales-a.verticales);}
+        if(btn_filter==1){result.sort((a,b)=>{
+          if(b.lineas.linCount>a.lineas.linCount){return 1}
+          if(b.lineas.maxCount-a.lineas.maxCount){return 1}
+        });}
+        if(btn_filter==2){result.sort((a,b)=>{
+          if(b.verticales.linCount-a.verticales.linCount){return 1}
+          if(b.verticales.maxCount-a.verticales.maxCount){return 1}
+        });}
         if(btn_filter==3){result.sort((a,b)=>b.chequeados-a.chequeados);}
         result.forEach((e,t) => {
           bingos_qty++;
@@ -226,9 +250,9 @@
             <p style="margin:0px;font-size:1.2em">${e.name || "-"}
             </p>
             <p style='color:#9e9e9e;font-size:.8em;margin:0px'>
-              <i class="zmdi zmdi-long-arrow-right"></i> ${e.lineas} |
-              <i class="zmdi zmdi-long-arrow-up"></i> ${e.verticales} |
-              <i class="zmdi zmdi-collection-music"></i> ${e.chequeados}     </p>         
+              <a style="display:${btn_filter==1?"block":"none"}"><i class="zmdi zmdi-long-arrow-right"></i> ${e.lineas.linCount} lines | To new line: ${5-e.lineas.maxCount}  songs</a>
+              <a style="display:${btn_filter==2?"block":"none"}"><i class="zmdi zmdi-long-arrow-up"></i> ${e.verticales.linCount} lines | To new line: ${5-e.verticales.maxCount}  songs</a>
+              <a style="display:${btn_filter==3?"block":"none"}"><i class="zmdi zmdi-collection-music"></i> ${e.chequeados} | To end: ${25-e.chequeados} songs</a></p>         
               <button class="btn btn-xs btn_img" data_img="${e.url}" style="padding:1px 10px;margin-top:-41px;font-size:1.1em;border-radius:100px;background:rgb(100,100,100);color:rgba(200,200,200);float:left">
                 <i class="zmdi zmdi-eye"></i>
               </button>
