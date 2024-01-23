@@ -54,7 +54,7 @@
     <div class="capa capa_1 row" style="padding: 0px;;margin: 0px;padding: 0px;text-align: center;">
 
     <div class="row" style="padding: 10px;background-color: #000;margin: 0px;">
-      <input type="text" class="form-control" onclick="capa(2);$('#txt_buscar').focus()"placeholder="Song name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;">
+      <input type="text" class="form-control" onclick="capa(2);$('#txt_buscar').focus().val('')"placeholder="Song name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;">
     </div>
     <div class="container">
       <div class="col-12" style="margin-top: 20px;">
@@ -95,7 +95,7 @@
     <div class="capa capa_2 row" style="margin: 0px;padding: 0px;text-align: center;">
         
         <div class="row" style="padding: 10px;background-color: #000;margin: 0px;">
-        <input type="text" class="form-control" id="txt_buscar" placeholder="Song name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;">
+          <input type="text" onfocus="$(this).val('');$(this).keyup()" autocomplete="off" class="form-control" id="txt_buscar" placeholder="Song name.." style="width: 100%;background-color:rgba(255,255,255,.12);border:0px;border-radius: 100px;color:#FFCC00;">
         </div>
         <div class="co-12 songs" style="padding:30px 20px 100px 20px">
 
@@ -230,16 +230,15 @@
         newC=result.map(a=>{
           return a.bingo.map(b=>b.chequeado).filter(c=>{if(c){return true;}}).length;
         })
-        console.log(newC)
-        result=result.map((a,i)=>{a.lineas=newA[i];a.verticales=newB[i];a.chequeados=newC[i];return a;})
-        
+        result=result.map((a,i)=>{a.lineas=newA[i].linCount;a.lineasC=newA[i].maxCount;a.verticales=newB[i].linCount;a.verticalesC=newB[i].maxCount; a.chequeados=newC[i];return a;})
+        console.log(result.map(a=> {return {l:a.lineas,lc:a.lineasC,v:a.verticales,vc:a.verticalesC};}))
         if(btn_filter==1){result.sort((a,b)=>{
-          if(b.lineas.linCount>a.lineas.linCount){return 1}
-          if(b.lineas.maxCount-a.lineas.maxCount){return 1}
+          if(b.lineas-a.lineas<0){return -1}
+          if(b.lineasC-a.lineasC<0){return -1}
         });}
         if(btn_filter==2){result.sort((a,b)=>{
-          if(b.verticales.linCount-a.verticales.linCount){return 1}
-          if(b.verticales.maxCount-a.verticales.maxCount){return 1}
+          if(b.verticales-a.verticales<0){return -1}
+          if(b.verticalesC-a.verticalesC<0){return -1}
         });}
         if(btn_filter==3){result.sort((a,b)=>b.chequeados-a.chequeados);}
         result.forEach((e,t) => {
